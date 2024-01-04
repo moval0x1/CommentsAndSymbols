@@ -34,8 +34,11 @@ def main(bv):
 	# See .../api/ui/sidebar.h for interface details.
 	
 	from binaryninjaui import SidebarWidget, SidebarWidgetType, Sidebar, UIActionHandler
-	from PySide6.QtWidgets import QVBoxLayout, QListWidget
+	from PySide6.QtWidgets import QVBoxLayout, QListWidget, QLineEdit
 	from PySide6.QtGui import QImage
+	import PySide6.QtCore as QtCore
+
+	symbols_comments_list = []
 	
 	# Sidebar widgets must derive from SidebarWidget, not QWidget. SidebarWidget is a QWidget but
 	# provides callbacks for sidebar events, and must be created with a title.
@@ -45,32 +48,60 @@ def main(bv):
 			self.actionHandler = UIActionHandler()
 			self.actionHandler.setupActionHandler(self)
 			
-			layout = QVBoxLayout()
-			widget = QListWidget()
+			self.layout = QVBoxLayout()
+			self.widget = QListWidget()
+
+			self.line_edit = QLineEdit()
+			self.line_edit.setMaxLength(10)
+			self.line_edit.setPlaceholderText("Filter your search")
+			self.line_edit.textChanged.connect(self.filter_text)
+			self.line_edit.returnPressed.connect(self.return_pressed)
+
 	
 			# Add items
 			for symbol in bv.symbols.items():
 				label = symbol[0]
+
+				if label.startswith('__'):
+					continue
+
 				addr = int(str(bv.symbols.get(label)).split('>')[0].split('@')[1].replace('x','').strip(),16)
-				widget.addItem(f"[+] {hex(addr)} - {label}")
+				
+				f_symbol = f"[+] {hex(addr)} - {label}"
+				symbols_comments_list.append(f_symbol)
+				self.widget.addItem(f_symbol)
 
 
 			for x in range(bv.start, bv.end):
 				comment = bv.get_comment_at(x)
 				if comment:
-					widget.addItem(f"[+] {hex(x)} - {comment}")
+					f_comment = f"[+] {hex(x)} - {comment}"
+					symbols_comments_list.append(f_comment)
+					self.widget.addItem(f_comment)
 	
 
-			widget.currentTextChanged.connect(self.text_changed)
+			self.widget.currentTextChanged.connect(self.text_changed)
 
-			layout.addWidget(widget)
-			layout.setContentsMargins(0, 0, 0, 0)
-			layout.setSpacing(0)
+			self.layout.addWidget(self.line_edit)
+			self.layout.addWidget(self.widget)
+			self.layout.setContentsMargins(0, 0, 0, 0)
+			self.layout.setSpacing(0)
 
-			self.setLayout(layout)
+			self.setLayout(self.layout)
 	
 		def text_changed(self, s):
 			print(s)
+
+		def filter_text(self, s):
+			print(s)
+			self.widget.clear()
+			rex_ex = QtCore.QRegularExpression(s)
+			filter_files = [x for x in symbols_comments_list if rex_ex.match(x).hasMatch()]
+			self.widget.addItems(filter_files)
+
+		def return_pressed(self):
+			self.widget.clear()
+			self.widget.addItems(symbols_comments_list)
 	
 	root = Path(__file__).parent
 	
