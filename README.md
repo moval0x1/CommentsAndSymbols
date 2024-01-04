@@ -7,7 +7,7 @@ _CommentsAndSymbols_
 
 Show comments and symbols renamed during the analysis process.
 
-![Comments and Symbols](img/binja-commentsAndSymbols.png)
+![Comments and Symbols](img/bn-commentsAndSymbols.png)
 
 ## Installation
 
