@@ -1,7 +1,7 @@
-# CommentsAndSymbols
+# Comments And Symbols
 Author: **moval0x1**
 
-_CommentsAndSymbols_
+_Comments And Symbols_
 
 ## Description:
 
@@ -12,6 +12,9 @@ Show comments and symbols renamed during the analysis process.
 ## Installation
 
 Clone this repo into your Binary Ninja plugin directory.
+
+## Credits
+Inspired by [Comments Viewer](https://github.com/matteyeux/comments-viewer)
 
 ## Minimum Version
 
