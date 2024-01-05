@@ -37,12 +37,18 @@ class CommentsAndSymbolsDialog(QDialog):
 
         self.setLayout(self.layout)
 
+    def add_item_lst(self, item):
+        if item in symbols_comments_list:
+            return
+
+        symbols_comments_list.append(item)
+
     def add_comments(self):
         for x in range(self.bv.start, self.bv.end):
             comment = self.bv.get_comment_at(x)
             if comment:
                 f_comment = f"[+] {hex(x)} - {comment}"
-                symbols_comments_list.append(f_comment)
+                self.add_item_lst(f_comment)
                 self.list_widget.addItem(f_comment)
 
     def add_symbols(self):
@@ -55,7 +61,7 @@ class CommentsAndSymbolsDialog(QDialog):
             addr = int(str(self.bv.symbols.get(label)).split('>')[0].split('@')[1].replace('x', '').strip(), 16)
 
             f_symbol = f"[+] {hex(addr)} - {label}"
-            symbols_comments_list.append(f_symbol)
+            self.add_item_lst(f_symbol)
             self.list_widget.addItem(f_symbol)
 
     def text_changed(self, s):
