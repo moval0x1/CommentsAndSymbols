@@ -5,9 +5,13 @@ _Comments And Symbols_
 
 ## Description:
 
-Show comments and symbols renamed during the analysis process.
+You can use this plugin to show comments and symbols renamed during the analysis process.
 
 ![Comments and Symbols](img/bn-commentsAndSymbols.png)
+
+When you need to find a comment that you did, you can filter the text to find it and refresh it when you rename a function or add a new comment.
+
+![Filter](img/bn-filter.png)
 
 ## Installation
 

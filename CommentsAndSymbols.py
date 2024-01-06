@@ -2,7 +2,7 @@ import binaryninjaui
 import PySide6.QtCore as QtCore
 
 from PySide6.QtCore import Qt, QAbstractItemModel, QModelIndex
-from PySide6.QtWidgets import QApplication, QDialog, QVBoxLayout, QListWidget, QLineEdit
+from PySide6.QtWidgets import QApplication, QDialog, QVBoxLayout, QListWidget, QLineEdit, QPushButton
 
 from pathlib import Path
 
@@ -12,10 +12,11 @@ symbols_comments_list = []
 class CommentsAndSymbolsDialog(QDialog):
     def __init__(self, bv):
         super(CommentsAndSymbolsDialog, self).__init__()
+        global symbols_comments_list
         self.bv = bv
 
         self.setWindowTitle("Show Comments and Renamed Symbols")
-        self.setGeometry(800, 200, 500, 800)
+        self.setGeometry(1200, 200, 500, 800)
 
         self.layout = QVBoxLayout()
         self.list_widget = QListWidget()
@@ -25,17 +26,29 @@ class CommentsAndSymbolsDialog(QDialog):
         self.line_edit.setPlaceholderText("Filter your search")
         self.line_edit.textChanged.connect(self.filter_text)
         self.line_edit.returnPressed.connect(self.return_pressed)
+        self.line_edit.setMaxLength(30)
+
+        self.button = QPushButton('Refresh')
+        self.button.clicked.connect(self.button_clicked)
 
         self.add_symbols()
         self.add_comments()
 
         self.list_widget.currentTextChanged.connect(self.text_changed)
+        self.layout.addWidget(self.button)
         self.layout.addWidget(self.line_edit)
         self.layout.addWidget(self.list_widget)
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)
 
         self.setLayout(self.layout)
+
+    def button_clicked(self):
+        self.line_edit.clear()
+        symbols_comments_list.clear()
+        self.add_symbols()
+        self.add_comments()
+
 
     def add_item_lst(self, item):
         if item in symbols_comments_list:
