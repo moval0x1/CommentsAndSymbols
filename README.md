@@ -1,4 +1,4 @@
-# CommentsAndSymbols (v1.0.0)
+# Comments And Symbols (v1.0.0)
 Author: **moval0x1**
 
 _Show comments and symbols renamed during the analysis process._
