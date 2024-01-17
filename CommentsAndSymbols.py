@@ -67,8 +67,9 @@ class CommentsAndSymbolsDialog(QDialog):
     def add_symbols(self):
         for symbol in self.bv.symbols.items():
             label = symbol[0]
+            symbol_splited = str(self.bv.symbols.get(label)).split('>')[0]
 
-            if label.startswith('__'):
+            if label.startswith('__') or "@" not in symbol_splited:
                 continue
 
             addr = int(str(self.bv.symbols.get(label)).split('>')[0].split('@')[1].replace('x', '').strip(), 16)
